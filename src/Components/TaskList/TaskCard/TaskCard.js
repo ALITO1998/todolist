@@ -1,13 +1,27 @@
 import React from 'react'
-import styles from './TaskCard.module.css'
+import { Checkbox, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Delete } from '@mui/icons-material'
 
 const TaskCard = ({ item, handleDelete, handleChecked }) => {
     // Render the task card with checkbox, task description, and delete button
-    return <tr key={item.id}>
-        <td className={styles.tBtn}><input type="checkbox" defaultChecked={item.status === 'not yet' ? false : true} onClick={() => { return handleChecked(item.id) }} /></td>
-        <td>{item.task}</td>
-        <td className={styles.tBtn}><button className={styles.dltBtn} onClick={() => handleDelete(item.id)}>X</button></td>
-    </tr>
+    return <ListItem key={item.id}>
+        <ListItemButton label="Task">
+
+            <ListItemIcon>
+                <Checkbox
+                    checked={item.status === 'not yet' ? false : true}
+                    onClick={() => { return handleChecked(item.id) }}
+                    sx={{ color: 'blue', '&.Mui-checked': { color: 'green' }, }}
+                />
+            </ListItemIcon>
+            <ListItemText primary={item.task} />
+            <ListItemIcon>
+                <IconButton onClick={() => handleDelete(item.id)}>
+                    <Delete />
+                </IconButton>
+            </ListItemIcon>
+        </ListItemButton>
+    </ListItem>
 }
 
 export default TaskCard

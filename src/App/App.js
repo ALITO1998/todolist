@@ -1,33 +1,33 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import Header from '../Components/Header/Header';
-import Footer from '../Components/Footer/Footer';
-import styles from './App.module.css'
 import TaskList from '../Components/TaskList/TaskList';
-import Modal from '../Components/Modal/Modal';
 import AddTask from '../Components/AddTask/AddTask';
-
+import { Box, Container, Fab, Tab } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Add } from '@mui/icons-material';
+import Modal from '@mui/joy/Modal';
+import ModalClose from '@mui/joy/ModalClose';
+import { ModalDialog } from '@mui/joy';
 const App = () => {
     const [category, setCategory] = useState('all');
     const [show, setShow] = useState(false);
     const [data, setData] = useState([]);
     const [shownData, setShownData] = useState([]);
+    const [value, setValue] = React.useState('all');
+
+    const handleChange = (e, newValue) => {
+        setCategory(newValue);
+        setValue(newValue);
+    };
+
 
 
     useEffect(() => {
         if (category === "all") {
-            document.getElementById('allCategory').style.backgroundColor = 'rgb(0, 0, 200)';
-            document.getElementById('doneCategory').style.backgroundColor = 'rgb(160, 160, 255)';
-            document.getElementById('notYetCategory').style.backgroundColor = 'rgb(160, 160, 255)';
             setShownData(data);
         } else if (category === "done") {
-            document.getElementById('allCategory').style.backgroundColor = 'rgb(160, 160, 255)';
-            document.getElementById('doneCategory').style.backgroundColor = 'rgb(0, 0, 200)';
-            document.getElementById('notYetCategory').style.backgroundColor = 'rgb(160, 160, 255)';
             setShownData(data.filter((ele) => ele.status === "done"));
         } else {
-            document.getElementById('allCategory').style.backgroundColor = 'rgb(160, 160, 255)';
-            document.getElementById('doneCategory').style.backgroundColor = 'rgb(160, 160, 255)';
-            document.getElementById('notYetCategory').style.backgroundColor = 'rgb(0, 0, 200)';
             setShownData(data.filter((ele) => ele.status === "not yet"));
         }
 
@@ -49,39 +49,32 @@ const App = () => {
 
     return (
         <Fragment>
-            <div className={styles.allAppContent} >
+            <Container maxWidth={'md'}>
                 <Header></Header>
-                {/* Your app content goes here */}
-                <div className={styles.categoryDiv}>
-                    <div className={styles.categoryList}>
-                        <button id='allCategory' className={styles.categoryItem} onClick={() => setCategory('all')} >All</button>
-                        <button id='doneCategory' className={styles.categoryItem} onClick={() => setCategory('done')} >Done</button>
-                        <button id='notYetCategory' className={styles.categoryItem} onClick={() => setCategory('not yet')} >Pending</button>
-                    </div>
-                </div>
-
-                <div className={styles.taskList}>
-                    {/* Your task list goes here */}
-                    <table className={styles.taskTable}>
-                        <thead className={styles.taskTableHeader}>
-                            <tr>
-                                <th>Status</th>
-
-                                <th className={styles.taskCells}>Task</th>
-
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <Box sx={{ width: '100%' }}>
+                    <TabContext value={value}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <TabList onChange={handleChange} centered>
+                                <Tab label="All" value="all" />
+                                <Tab label="Done" value="done" />
+                                <Tab label="Pending" value="not yet" />
+                            </TabList>
+                        </Box>
+                        <TabPanel value={category}>
                             <TaskList data={shownData} handleChecked={handleChecked} handleDelete={handleDelete} />
-                        </tbody>
-                    </table>
-                    <button className={styles.addBtn} onClick={() => setShow(true)}>+</button>
-                </div>
-                <Footer></Footer>
-            </div>
-            <Modal show={show} closeModel={() => setShow(false)}>
-                <AddTask AddTaskHandler={addTaskHandler} closeModel={() => setShow(false)} />
+                        </TabPanel>
+                    </TabContext>
+                    <Fab color="primary" aria-label="add">
+                        <Add onClick={() => setShow(true)} />
+                    </Fab>
+                </Box>
+            </Container>
+            <Modal open={show}
+                onClose={() => setShow(false)} >
+                <ModalDialog size="lg">
+                    <ModalClose />
+                    <AddTask AddTaskHandler={addTaskHandler} closeModel={() => setShow(false)} />
+                </ModalDialog>
             </Modal>
         </Fragment >
     )
