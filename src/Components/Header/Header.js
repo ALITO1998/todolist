@@ -1,11 +1,15 @@
 import React from 'react'
-import styles from './Header.module.css'
+import { Typography } from '@mui/material'
+
 
 const Header = () => {
     return (
-        <div className={styles.header} >
-            <h1 > Todo App </h1>
-        </div>
+        <Typography
+            variant="h1"
+            sx={{ width: '100%', backgroundColor: 'rgb(160, 160, 255)', marginBottom: '5px', textAlign: 'center', color: 'whitesmoke' }}
+            gutterBottom>
+            Todo App
+        </Typography>
     )
 }
 export default Header

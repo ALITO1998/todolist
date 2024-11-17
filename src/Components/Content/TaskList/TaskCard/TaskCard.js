@@ -1,6 +1,7 @@
 import React from 'react'
-import { Checkbox, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Checkbox, IconButton, ListItem, ListItemButton, ListItemIcon } from '@mui/material'
 import { Delete } from '@mui/icons-material'
+import Task from '../../Task/Task'
 
 const TaskCard = ({ item, handleDelete, handleChecked }) => {
     // Render the task card with checkbox, task description, and delete button
@@ -14,7 +15,7 @@ const TaskCard = ({ item, handleDelete, handleChecked }) => {
                     sx={{ color: 'blue', '&.Mui-checked': { color: 'green' }, }}
                 />
             </ListItemIcon>
-            <ListItemText primary={item.task} />
+            <Task type="show" task={item} />
             <ListItemIcon>
                 <IconButton onClick={() => handleDelete(item.id)}>
                     <Delete />

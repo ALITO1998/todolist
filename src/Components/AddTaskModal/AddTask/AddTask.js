@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Box, FormControl, IconButton, Input, InputLabel, Alert } from '@mui/material';
+import { Box, FormControl, IconButton, Alert } from '@mui/material';
+import Task from '../../Content/Task/Task';
 
 const AddTask = ({ AddTaskHandler, closeModel }) => {
     const [alertEmpty, setAlertEmpty] = useState(false);
+    const [task, setTask] = useState('');
+
     const submitHandler = (e) => {
         e.preventDefault();
         if (task === '') {
@@ -15,20 +18,18 @@ const AddTask = ({ AddTaskHandler, closeModel }) => {
         }
     }
 
-    const [task, setTask] = useState('');
-
-    const inputHandler = (e) => {
+    const inputHandler = (Value) => {
         setAlertEmpty(false);
-        const Value = e.target.value;
         setTask(Value);
     }
 
     return (
-        <Box component="form" onSubmit={submitHandler} sx={{ margin: '10px' }}>
+        <Box id='addTaskBox' component="form" onSubmit={submitHandler} sx={{ margin: '10px', }}>
+            <FormControl sx={{ marginRight: '25px', display: 'flex' }} >
+                {alertEmpty && <Alert severity="error" sx={{ mb: '5px' }}>Task cannot be empty</Alert>}
+            </FormControl>
             <FormControl sx={{ marginRight: '25px' }} >
-                <InputLabel sx={{ fontSize: '28px' }} htmlFor="task">Task</InputLabel>
-                <Input id="task" value={task || ""} onChange={inputHandler} placeholder='Enter Your Task' />
-                {alertEmpty && <Alert severity="error">Task cannot be empty</Alert>}
+                <Task type='add' inputHandler={inputHandler} />
             </FormControl>
             <FormControl>
                 <IconButton type="submit" >Save</IconButton>
