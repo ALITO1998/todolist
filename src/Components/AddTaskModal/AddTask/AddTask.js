@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, FormControl, IconButton, Alert } from '@mui/material';
 import Task from '../../Content/Task/Task';
 
-const AddTask = ({ AddTaskHandler, closeModel }) => {
-    const [alertEmpty, setAlertEmpty] = useState(false);
+const AddTask = ({ AddTaskHandler, submitHandler, alertEmpty, inputHandler }) => {
+    /* const [alertEmpty, setAlertEmpty] = useState(false);
     const [task, setTask] = useState('');
 
     const submitHandler = (e) => {
@@ -21,7 +21,7 @@ const AddTask = ({ AddTaskHandler, closeModel }) => {
     const inputHandler = (Value) => {
         setAlertEmpty(false);
         setTask(Value);
-    }
+    } */
 
     return (
         <Box id='addTaskBox' component="form" onSubmit={submitHandler} sx={{ margin: '10px', }}>

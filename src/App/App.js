@@ -8,6 +8,8 @@ const App = () => {
     const [showModal, setShowModal] = useState(false);
     const [data, setData] = useState([]);
     const [shownData, setShownData] = useState([]);
+    const [alertEmpty, setAlertEmpty] = useState(false);
+    const [task, setTask] = useState('');
 
     const handleChangeCategory = (e, newValue) => {
         setCategory(newValue);
@@ -48,6 +50,24 @@ const App = () => {
         setShowModal(false);
     }
 
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        if (task === '') {
+            setAlertEmpty(true);
+        } else {
+            const id = Date.now();
+            addTaskHandler({ id, task });
+            setTask('');
+            setShowModal(false);
+        }
+    }
+
+    const inputHandler = (Value) => {
+        setAlertEmpty(false);
+        setTask(Value);
+    }
+
     return (
         <Fragment>
             <Container maxWidth={'md'}>
@@ -67,7 +87,10 @@ const App = () => {
             <AddTaskModal
                 showModal={showModal}
                 hideModal={hideModal}
-                addTaskHandler={addTaskHandler} />
+                addTaskHandler={addTaskHandler}
+                submitHandler={submitHandler}
+                alertEmpty={alertEmpty}
+                inputHandler={inputHandler} />
 
         </Fragment >
     )
