@@ -63,9 +63,9 @@ const App = () => {
         }
     }
 
-    const inputHandler = (Value) => {
+    const inputTaskHandler = (e) => {
         setAlertEmpty(false);
-        setTask(Value);
+        setTask(e.target.value);
     }
 
     return (
@@ -87,10 +87,11 @@ const App = () => {
             <AddTaskModal
                 showModal={showModal}
                 hideModal={hideModal}
-                addTaskHandler={addTaskHandler}
                 submitHandler={submitHandler}
                 alertEmpty={alertEmpty}
-                inputHandler={inputHandler} />
+                inputTaskHandler={inputTaskHandler}
+                task={task}
+            />
 
         </Fragment >
     )
