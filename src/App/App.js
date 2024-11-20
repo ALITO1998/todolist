@@ -9,7 +9,7 @@ const App = () => {
     const [data, setData] = useState([]);
     const [shownData, setShownData] = useState([]);
     const [alertEmpty, setAlertEmpty] = useState(false);
-    const [task, setTask] = useState('');
+    const [task, setTask] = useState({});
 
     const handleChangeCategory = (e, newValue) => {
         setCategory(newValue);
@@ -38,8 +38,8 @@ const App = () => {
     }
 
     //Add new Task to the array of Tasks from Model
-    const addTaskHandler = ({ id, task }) => {
-        setData([...data, { status: 'not yet', task: task, id: id }]);
+    const addTaskHandler = ({ task }) => {
+        setData([...data, { status: task.status, title: task.title, id: task.id }]);
     }
 
     const showModalTrue = () => {
@@ -51,13 +51,14 @@ const App = () => {
     }
 
 
-    const submitHandler = (e) => {
+    const addTaskBtnHandler = (e) => {
         e.preventDefault();
-        if (task === '') {
+        if (task.title === '') {
             setAlertEmpty(true);
         } else {
-            const id = Date.now();
-            addTaskHandler({ id, task });
+            task.status = 'not yet';
+            task.id = Date.now();
+            addTaskHandler({ task });
             setTask('');
             setShowModal(false);
         }
@@ -65,7 +66,9 @@ const App = () => {
 
     const inputTaskHandler = (e) => {
         setAlertEmpty(false);
-        setTask(e.target.value);
+        const name = e.target.getAttribute('name');
+        const value = e.target.value;
+        setTask({ ...task, [name]: value });
     }
 
     return (
@@ -87,7 +90,7 @@ const App = () => {
             <AddTaskModal
                 showModal={showModal}
                 hideModal={hideModal}
-                submitHandler={submitHandler}
+                addTaskBtnHandler={addTaskBtnHandler}
                 alertEmpty={alertEmpty}
                 inputTaskHandler={inputTaskHandler}
                 task={task}

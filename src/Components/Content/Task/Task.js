@@ -11,14 +11,14 @@ const Task = ({ task, type, inputTaskHandler }) => {
 
 const TaskShow = ({ task }) => {
 
-    return <ListItemText primary={task.task} sx={task.status === 'done' ? { textDecorationLine: 'line-through' } : {}} />
+    return <ListItemText primary={task.title} sx={task.status === 'done' ? { textDecorationLine: 'line-through' } : {}} />
 }
 
 
 const TaskAdded = ({ inputTaskHandler, task }) => {
     return (<Fragment>
-        <InputLabel sx={{ fontSize: '28px' }} htmlFor="task">Task</InputLabel>
-        <Input id="task" value={task || ""} onChange={inputTaskHandler} placeholder='Enter Your Task' />
+        <InputLabel sx={{ fontSize: '28px' }} htmlFor="task">Title</InputLabel>
+        <Input name='title' id="task" value={task.title || ""} onChange={inputTaskHandler} placeholder='Enter Your Task Title...' />
     </Fragment>
     )
 }

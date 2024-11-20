@@ -3,14 +3,14 @@ import { Modal } from '@mui/material'
 import React from 'react'
 import AddTask from './AddTask/AddTask'
 
-const AddTaskModal = ({ showModal, hideModal, submitHandler, alertEmpty, inputTaskHandler, task }) => {
+const AddTaskModal = ({ showModal, hideModal, addTaskBtnHandler, alertEmpty, inputTaskHandler, task }) => {
 
     return (
         <Modal open={showModal}
             onClose={hideModal} >
             <ModalDialog size="lg">
                 <ModalClose />
-                <AddTask submitHandler={submitHandler} alertEmpty={alertEmpty} inputTaskHandler={inputTaskHandler} task={task} />
+                <AddTask addTaskBtnHandler={addTaskBtnHandler} alertEmpty={alertEmpty} inputTaskHandler={inputTaskHandler} task={task} />
             </ModalDialog>
         </Modal>
     )
