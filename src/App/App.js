@@ -3,6 +3,7 @@ import Header from '../Components/Header/Header';
 import Content from '../Components/Content/Content';
 import AddTaskModal from '../Components/AddTaskModal/AddTaskModal';
 import { Container } from '@mui/material';
+import dayjs from 'dayjs';
 const App = () => {
     const [category, setCategory] = useState('all');
     const [showModal, setShowModal] = useState(false);
@@ -39,7 +40,7 @@ const App = () => {
 
     //Add new Task to the array of Tasks from Model
     const addTaskHandler = ({ task }) => {
-        setData([...data, { status: task.status, title: task.title, id: task.id }]);
+        setData([...data, { status: task.status, title: task.title, id: task.id, expectedDoneDate: task.expectedDoneDate }]);
     }
 
     const showModalTrue = () => {
@@ -53,10 +54,11 @@ const App = () => {
 
     const addTaskBtnHandler = (e) => {
         e.preventDefault();
-        if (task.title === '') {
+        if (task.title === '' || task.title === undefined) {
             setAlertEmpty(true);
         } else {
-            task.status = 'not yet';
+            task.expectedDoneDate === undefined ? task.expectedDoneDate = dayjs() :
+                task.status = 'not yet';
             task.id = Date.now();
             addTaskHandler({ task });
             setTask('');
@@ -66,9 +68,13 @@ const App = () => {
 
     const inputTaskHandler = (e) => {
         setAlertEmpty(false);
-        const name = e.target.getAttribute('name');
-        const value = e.target.value;
-        setTask({ ...task, [name]: value });
+        const key = e.target;
+        if (key !== undefined) {
+            const value = e.target.value;
+            setTask({ ...task, [key.id]: value });
+        } else {
+            setTask({ ...task, expectedDoneDate: e });
+        }
     }
 
     return (

@@ -9,9 +9,9 @@ const AddTask = ({ addTaskBtnHandler, alertEmpty, inputTaskHandler, task }) => {
             <FormControl sx={{ marginRight: '25px', display: 'flex' }} >
                 {alertEmpty && <Alert severity="error" sx={{ mb: '5px' }}>Task cannot be empty</Alert>}
             </FormControl>
-            <FormControl sx={{ marginRight: '25px' }} >
-                <Task type='add' inputTaskHandler={inputTaskHandler} task={task} />
-            </FormControl>
+
+            <Task type='add' inputTaskHandler={inputTaskHandler} task={task} />
+
             <FormControl>
                 <IconButton type="submit" >Save</IconButton>
             </FormControl>
