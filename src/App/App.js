@@ -3,13 +3,14 @@ import Header from '../Components/Header/Header';
 import Content from '../Components/Content/Content';
 import AddTaskModal from '../Components/AddTaskModal/AddTaskModal';
 import { Container } from '@mui/material';
+import dayjs from 'dayjs';
 const App = () => {
     const [category, setCategory] = useState('all');
     const [showModal, setShowModal] = useState(false);
     const [data, setData] = useState([]);
     const [shownData, setShownData] = useState([]);
     const [alertEmpty, setAlertEmpty] = useState(false);
-    const [task, setTask] = useState('');
+    const [task, setTask] = useState({});
 
     const handleChangeCategory = (e, newValue) => {
         setCategory(newValue);
@@ -38,8 +39,8 @@ const App = () => {
     }
 
     //Add new Task to the array of Tasks from Model
-    const addTaskHandler = ({ id, task }) => {
-        setData([...data, { status: 'not yet', task: task, id: id }]);
+    const addTaskHandler = ({ task }) => {
+        setData([...data, { status: task.status, title: task.title, id: task.id, expectedDoneDate: task.expectedDoneDate }]);
     }
 
     const showModalTrue = () => {
@@ -51,13 +52,15 @@ const App = () => {
     }
 
 
-    const submitHandler = (e) => {
+    const addTaskBtnHandler = (e) => {
         e.preventDefault();
-        if (task === '') {
+        if (task.title === '' || task.title === undefined) {
             setAlertEmpty(true);
         } else {
-            const id = Date.now();
-            addTaskHandler({ id, task });
+            task.expectedDoneDate === undefined ? task.expectedDoneDate = dayjs() :
+                task.status = 'not yet';
+            task.id = Date.now();
+            addTaskHandler({ task });
             setTask('');
             setShowModal(false);
         }
@@ -65,7 +68,13 @@ const App = () => {
 
     const inputTaskHandler = (e) => {
         setAlertEmpty(false);
-        setTask(e.target.value);
+        const key = e.target;
+        if (key !== undefined) {
+            const value = e.target.value;
+            setTask({ ...task, [key.id]: value });
+        } else {
+            setTask({ ...task, expectedDoneDate: e });
+        }
     }
 
     return (
@@ -87,7 +96,7 @@ const App = () => {
             <AddTaskModal
                 showModal={showModal}
                 hideModal={hideModal}
-                submitHandler={submitHandler}
+                addTaskBtnHandler={addTaskBtnHandler}
                 alertEmpty={alertEmpty}
                 inputTaskHandler={inputTaskHandler}
                 task={task}
