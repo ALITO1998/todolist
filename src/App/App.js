@@ -57,8 +57,10 @@ const App = () => {
         if (task.title === '' || task.title === undefined) {
             setAlertEmpty(true);
         } else {
-            task.expectedDoneDate === undefined ? task.expectedDoneDate = dayjs() :
-                task.status = 'not yet';
+            if (task.expectedDoneDate === undefined) {
+                task.expectedDoneDate = dayjs();
+            }
+            task.status = 'not yet';
             task.id = Date.now();
             addTaskHandler({ task });
             setTask('');
