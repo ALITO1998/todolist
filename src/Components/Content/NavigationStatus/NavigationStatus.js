@@ -2,10 +2,10 @@ import { AllInclusive, DoneAll, Pending } from '@mui/icons-material'
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
 import React from 'react'
 
-const NavigationCategory = ({ category, handleChangeCategory }) => {
+const NavigationCategory = ({ status, handleChangeStatus }) => {
     return (
         <Paper elevation={1} >
-            <BottomNavigation value={category} onChange={handleChangeCategory}>
+            <BottomNavigation value={status} onChange={handleChangeStatus}>
                 <BottomNavigationAction
                     label="All"
                     value="all"

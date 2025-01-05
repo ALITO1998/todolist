@@ -1,17 +1,39 @@
-import React from 'react';
-import { Box, FormControl, IconButton, Alert, FormLabel } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, FormControl, IconButton, FormLabel } from '@mui/material';
 import Task from '../../Content/Task/Task';
+import dayjs from 'dayjs';
+import { getExpectedDoneDate, getTitle } from '../../Content/Task/Task';
+const AddTask = ({ addTaskHandler, cancel }) => {
+    const [alertEmpty, setAlertEmpty] = useState(false);
 
-const AddTask = ({ addTaskBtnHandler, alertEmpty, inputTaskHandler, task }) => {
+    const addTaskBtnHandler = (e) => {
+        e.preventDefault();
+        let task = {};
+        task.title = getTitle() ? getTitle() : "";
+        task.expectedDoneDate = getExpectedDoneDate() ? getExpectedDoneDate() : "";
+        if (task.title === '' || task.title === undefined) {
+            setAlertEmpty(true);
+        } else {
+            if (task.expectedDoneDate === undefined || task.expectedDoneDate === '') {
+                task.expectedDoneDate = dayjs();
+            }
+            task.status = 'not yet';
+            task.id = Date.now();
+            addTaskHandler({ task });
+            cancel();
+        }
+    }
+
+    const inputTaskHandler = (e) => {
+        setAlertEmpty(false);
+    }
+
 
     return (
         <Box id='addTaskBox' component="form" onSubmit={addTaskBtnHandler} sx={{ margin: '10px', }}>
             <FormLabel sx={{ fontSize: '32px' }}>Task</FormLabel>
-            <FormControl sx={{ margin: '10px', display: 'flex' }} >
-                {alertEmpty && <Alert severity="error" sx={{ mb: '5px' }}>Task cannot be empty</Alert>}
-            </FormControl>
 
-            <Task type='add' inputTaskHandler={inputTaskHandler} task={task} />
+            <Task type='add' errorEmpty={alertEmpty} inputTaskHandler={inputTaskHandler} />
 
             <FormControl sx={{ margin: '25px', display: 'flex' }}>
                 <IconButton type="submit" >Save</IconButton>
