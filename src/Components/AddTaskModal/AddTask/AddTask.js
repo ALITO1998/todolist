@@ -18,7 +18,6 @@ const AddTask = ({ addTaskHandler, cancel }) => {
                 task.expectedDoneDate = dayjs();
             }
             task.status = 'not yet';
-            task.id = Date.now();
             addTaskHandler({ task });
             cancel();
         }

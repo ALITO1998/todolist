@@ -5,13 +5,14 @@ import { Box } from '@mui/material'
 import TaskList from './TaskList/TaskList'
 //import dayjs from 'dayjs'
 import AddTaskModal from '../AddTaskModal/AddTaskModal'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { getTasks, addTask, deleteTask } from '../../store/taskSlice'
 const Content = () => {
     const [status, setStatus] = useState('all');
     const [showModal, setShowModal] = useState(false);
-    const [data, setData] = useState([]);
     const [shownData, setShownData] = useState([]);
-
+    const { tasks } = useSelector((state) => state.tasks);
+    const dispatch = useDispatch();
 
 
     const handleChangeStatus = (e, newValue) => {
@@ -21,26 +22,17 @@ const Content = () => {
 
 
     useEffect(() => {
+        dispatch(getTasks());
+
         if (status === "all") {
-            setShownData(data);
+            setShownData(tasks);
         } else {
-            setShownData(data.filter((ele) => ele.status === status));
+            setShownData(tasks.filter((ele) => ele.task.status === status));
         }
 
-    }, [status, data]);
+    }, [status, dispatch, tasks]);
 
-    const handleChecked = (id) => {
-        setData(data.map(item => item.id === id ? { ...item, status: item.status === 'not yet' ? 'done' : 'not yet' } : item))
-    }
 
-    const handleDelete = (id) => {
-        setData(data.filter(item => item.id !== id))
-        setShownData(shownData.filter(item => item.id !== id))
-    }
-
-    const addTaskHandler = ({ task }) => {
-        setData([...data, { status: task.status, title: task.title, id: task.id, expectedDoneDate: task.expectedDoneDate }]);
-    }
 
     const openModal = () => {
         setShowModal(true);
@@ -56,14 +48,14 @@ const Content = () => {
             <Box sx={{ width: '100%' }}>
                 <NavigationStatus status={status} handleChangeStatus={handleChangeStatus} />
 
-                <TaskList data={shownData} handleChecked={handleChecked} handleDelete={handleDelete} />
+                <TaskList data={shownData} handleDelete={(id) => { dispatch(deleteTask(id)) }} />
 
                 <AddTaskBtn openModal={openModal} />
             </Box>
             <AddTaskModal
                 showModal={showModal}
                 closeModal={closeModal}
-                addTaskHandler={addTaskHandler}
+                addTaskHandler={(task) => { dispatch(addTask(task)) }}
             />
         </Fragment>
     )

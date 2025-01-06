@@ -1,0 +1,81 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+
+export const getTasks = createAsyncThunk('tasks/getTasks', async (_, ThunkAPI) => {
+    const { rejectWithValue } = ThunkAPI;
+    try {
+        const response = await fetch('http://localhost:3007/task');
+        const tasks = await response.json()
+        return tasks;
+    } catch (error) {
+        return rejectWithValue(error.massage);
+    }
+});
+
+export const addTask = createAsyncThunk('tasks/addTask', async (task, ThunkAPI) => {
+    const { rejectWithValue } = ThunkAPI;
+    try {
+        const response = await fetch('http://localhost:3007/task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task),
+        });
+        const data = await response.json()
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.massage);
+    }
+
+});
+
+export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, ThunkAPI) => {
+    const { rejectWithValue } = ThunkAPI;
+    try {
+        await fetch(`http://localhost:3007/task/${id}`, {
+            method: 'DELETE',
+        });
+        return id;
+    } catch (error) {
+        return rejectWithValue(error.massage);
+    }
+});
+
+const tasksSlice = createSlice({
+    name: 'tasks',
+    initialState: {
+        tasks: [],
+        selectedTask: null,
+    },
+    reducers: {},
+    extraReducers: builder => {
+        //GetTasks
+        builder.addCase(getTasks.fulfilled, (state, action) => {
+            state.tasks = action.payload;
+        });
+        builder.addCase(getTasks.rejected, (state, action) => {
+            console.error(action.payload);
+        });
+
+        //AddTask
+        builder.addCase(addTask.fulfilled, (state, action) => {
+            state.tasks.push(action.payload);
+        });
+        builder.addCase(addTask.rejected, (state, action) => {
+            console.error(action.payload);
+        });
+
+        //DeleteTask
+        builder.addCase(deleteTask.fulfilled, (state, action) => {
+            state.tasks = state.tasks.filter(task => task.id !== action.payload);
+        });
+        builder.addCase(deleteTask.rejected, (state, action) => {
+            console.error(action.payload);
+        });
+    }
+})
+
+
+
+export default tasksSlice.reducer;
