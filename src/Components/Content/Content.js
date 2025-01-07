@@ -6,7 +6,7 @@ import TaskList from './TaskList/TaskList'
 //import dayjs from 'dayjs'
 import AddTaskModal from '../AddTaskModal/AddTaskModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { getTasks, addTask, deleteTask } from '../../store/taskSlice'
+import { getTasks, addTask, deleteTask, updateTask } from '../../store/taskSlice'
 const Content = () => {
     const [status, setStatus] = useState('all');
     const [showModal, setShowModal] = useState(false);
@@ -19,18 +19,19 @@ const Content = () => {
         setStatus(newValue);
     };
 
+    useEffect(() => {
+        dispatch(getTasks());
+    }, [dispatch])
 
 
     useEffect(() => {
-        dispatch(getTasks());
-
         if (status === "all") {
             setShownData(tasks);
         } else {
             setShownData(tasks.filter((ele) => ele.task.status === status));
         }
 
-    }, [status, dispatch, tasks]);
+    }, [dispatch, status, tasks]);
 
 
 
@@ -48,7 +49,13 @@ const Content = () => {
             <Box sx={{ width: '100%' }}>
                 <NavigationStatus status={status} handleChangeStatus={handleChangeStatus} />
 
-                <TaskList data={shownData} handleDelete={(id) => { dispatch(deleteTask(id)) }} />
+                <TaskList
+                    data={shownData}
+                    handleDelete={(id) => { dispatch(deleteTask(id)) }}
+                    handleChecked={(item) => {
+                        dispatch(updateTask({ id: item.id, task: { ...item.task, status: item.task.status === "not yet" ? "done" : "not yet" } }))
+                    }}
+                />
 
                 <AddTaskBtn openModal={openModal} />
             </Box>

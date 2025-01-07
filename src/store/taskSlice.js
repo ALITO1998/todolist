@@ -42,6 +42,24 @@ export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, ThunkA
     }
 });
 
+export const updateTask = createAsyncThunk('tasks/updateTask', async (task, ThunkAPI) => {
+    const { rejectWithValue } = ThunkAPI;
+    try {
+        const response = await fetch(`http://localhost:3007/task/${task.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task),
+        });
+        const data = await response.json()
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.massage);
+    }
+});
+
+
 const tasksSlice = createSlice({
     name: 'tasks',
     initialState: {
@@ -71,6 +89,14 @@ const tasksSlice = createSlice({
             state.tasks = state.tasks.filter(task => task.id !== action.payload);
         });
         builder.addCase(deleteTask.rejected, (state, action) => {
+            console.error(action.payload);
+        });
+
+        //UpdateTask
+        builder.addCase(updateTask.fulfilled, (state, action) => {
+            state.tasks = state.tasks.map(task => task.id === action.payload.id ? action.payload : task);
+        });
+        builder.addCase(updateTask.rejected, (state, action) => {
             console.error(action.payload);
         });
     }

@@ -10,7 +10,7 @@ const TaskCard = ({ item, handleDelete, handleChecked }) => {
             <ListItemIcon>
                 <Checkbox
                     checked={item.task.status === 'not yet' ? false : true}
-                    onClick={() => { return handleChecked(item.id) }}
+                    onClick={() => { return handleChecked(item) }}
                     sx={{ color: 'blue', '&.Mui-checked': { color: "gray" }, }}
                 />
             </ListItemIcon>
