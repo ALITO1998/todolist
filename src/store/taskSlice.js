@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 export const getTasks = createAsyncThunk('tasks/getTasks', async (_, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        const response = await fetch('http://localhost:3007/task');
+        const response = await fetch('https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task');
         const tasks = await response.json()
         return tasks;
     } catch (error) {
@@ -15,7 +15,7 @@ export const getTasks = createAsyncThunk('tasks/getTasks', async (_, ThunkAPI) =
 export const addTask = createAsyncThunk('tasks/addTask', async (task, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        const response = await fetch('http://localhost:3007/task', {
+        const response = await fetch('https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export const addTask = createAsyncThunk('tasks/addTask', async (task, ThunkAPI) 
 export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        await fetch(`http://localhost:3007/task/${id}`, {
+        await fetch(`https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task/${id}`, {
             method: 'DELETE',
         });
         return id;
@@ -45,7 +45,7 @@ export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, ThunkA
 export const updateTask = createAsyncThunk('tasks/updateTask', async (task, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        const response = await fetch(`http://localhost:3007/task/${task.id}`, {
+        const response = await fetch(`https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task/${task.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
