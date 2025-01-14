@@ -14,13 +14,13 @@ const Task = ({ task, type, inputTaskHandler, errorEmpty }) => {
 }
 
 const TaskShow = ({ task }) => {
-    const date = new Date(task.task.expectedDoneDate);
+    const date = new Date(task.expectedDoneDate);
     return (<Fragment>
         <ListItemText
-            primary={task.task.title}
+            primary={task.title}
             secondary={"Task end date: " + date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()}
-            sx={task.task.status === 'done' ? { textDecorationLine: 'line-through' } : {}} />
-        {task.task.status === 'not yet' && date < new Date() ? <Alert severity="warning">Late</Alert> : <></>}
+            sx={task.status === 'done' ? { textDecorationLine: 'line-through' } : {}} />
+        {task.status === 'not yet' && date < new Date() ? <Alert severity="warning">Late</Alert> : <></>}
     </Fragment>);
 }
 

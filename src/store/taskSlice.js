@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import axios from 'axios';
 
 export const getTasks = createAsyncThunk('tasks/getTasks', async (_, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        const response = await fetch('https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task');
-        const tasks = await response.json()
-        return tasks;
+        const response = await axios.get('/api/items');
+        return response.data;
     } catch (error) {
         return rejectWithValue(error.massage);
     }
@@ -15,27 +14,17 @@ export const getTasks = createAsyncThunk('tasks/getTasks', async (_, ThunkAPI) =
 export const addTask = createAsyncThunk('tasks/addTask', async (task, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        const response = await fetch('https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(task),
-        });
-        const data = await response.json()
-        return data;
+        const response = await axios.post('/api/items', task);
+        return response.data;
     } catch (error) {
         return rejectWithValue(error.massage);
     }
-
 });
 
 export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        await fetch(`https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task/${id}`, {
-            method: 'DELETE',
-        });
+        await axios.delete(`/api/items/${id}`);
         return id;
     } catch (error) {
         return rejectWithValue(error.massage);
@@ -45,17 +34,10 @@ export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, ThunkA
 export const updateTask = createAsyncThunk('tasks/updateTask', async (task, ThunkAPI) => {
     const { rejectWithValue } = ThunkAPI;
     try {
-        const response = await fetch(`https://json-server-vercel-main-4yuqgjyop-alito1998s-projects.vercel.app/task/${task.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(task),
-        });
-        const data = await response.json()
-        return data;
+        const response = await axios.put(`/api/items/${task.id}`, task);
+        return response.data;
     } catch (error) {
-        return rejectWithValue(error.massage);
+        return rejectWithValue(error.message);
     }
 });
 
@@ -65,39 +47,61 @@ const tasksSlice = createSlice({
     initialState: {
         tasks: [],
         selectedTask: null,
+        pending: false
     },
     reducers: {},
     extraReducers: builder => {
         //GetTasks
+        builder.addCase(getTasks.pending, (state) => {
+            state.pending = true;
+        });
+
         builder.addCase(getTasks.fulfilled, (state, action) => {
             state.tasks = action.payload;
+            state.pending = false;
         });
         builder.addCase(getTasks.rejected, (state, action) => {
             console.error(action.payload);
+            state.pending = false;
         });
 
         //AddTask
+        builder.addCase(addTask.pending, (state) => {
+            state.pending = true;
+        });
         builder.addCase(addTask.fulfilled, (state, action) => {
             state.tasks.push(action.payload);
+            state.pending = false;
         });
         builder.addCase(addTask.rejected, (state, action) => {
             console.error(action.payload);
+            state.pending = false;
         });
 
         //DeleteTask
+        builder.addCase(deleteTask.pending, (state) => {
+            state.pending = true;
+        });
         builder.addCase(deleteTask.fulfilled, (state, action) => {
             state.tasks = state.tasks.filter(task => task.id !== action.payload);
+            state.pending = false;
         });
         builder.addCase(deleteTask.rejected, (state, action) => {
             console.error(action.payload);
+            state.pending = false;
         });
 
         //UpdateTask
+        builder.addCase(updateTask.pending, (state) => {
+            state.pending = true;
+        });
         builder.addCase(updateTask.fulfilled, (state, action) => {
             state.tasks = state.tasks.map(task => task.id === action.payload.id ? action.payload : task);
-        });
+            state.pending = false;
+        })
         builder.addCase(updateTask.rejected, (state, action) => {
             console.error(action.payload);
+            state.pending = false;
         });
     }
 })

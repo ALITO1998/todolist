@@ -9,7 +9,8 @@ import { getTasks, addTask, deleteTask, updateTask } from '../../store/taskSlice
 const Content = () => {
     const [status, setStatus] = useState('all');
     const [showModal, setShowModal] = useState(false);
-    const { tasks } = useSelector((state) => state.tasks);
+    //const [shownData, setShownData] = useState([]);
+    const { tasks, pending } = useSelector((state) => state.tasks);
     const dispatch = useDispatch();
 
 
@@ -37,21 +38,19 @@ const Content = () => {
     const closeModal = () => {
         setShowModal(false);
     }
-
-
     return (
         <Fragment>
             <Box sx={{ width: '100%' }}>
                 <NavigationStatus status={status} handleChangeStatus={handleChangeStatus} />
-
-                <TaskList
-                    data={shownData()}
-                    handleDelete={(id) => { dispatch(deleteTask(id)) }}
-                    handleChecked={(item) => {
-                        dispatch(updateTask({ id: item.id, task: { ...item.task, status: item.task.status === "not yet" ? "done" : "not yet" } }))
-                    }}
-                />
-
+                {pending ? ' pending' :
+                    <TaskList
+                        data={shownData()}
+                        handleDelete={(id) => { dispatch(deleteTask(id)) }}
+                        handleChecked={(item) => {
+                            dispatch(updateTask({ id: item.id, task: { ...item.task, status: item.task.status === "not yet" ? "done" : "not yet" } }))
+                        }}
+                    />
+                }
                 <AddTaskBtn openModal={openModal} />
             </Box>
             <AddTaskModal

@@ -14,7 +14,7 @@ const TaskCard = ({ item, handleDelete, handleChecked }) => {
                     sx={{ color: 'blue', '&.Mui-checked': { color: "gray" }, }}
                 />
             </ListItemIcon>
-            <Task type="show" task={item} />
+            <Task type="show" task={item.task} />
             <ListItemIcon>
                 <IconButton onClick={() => handleDelete(item.id)}>
                     <Delete />
